@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashbang</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #0a0a0a;
+      overflow: hidden;
+    }
+
+    img {
+      width: 200px;
+      transition: transform 0.1s ease;
+      cursor: pointer;
+    }
+
+    /* Animazione vibrazione */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-15px); }
+      40%, 80% { transform: translateX(15px); }
+    }
+
+    .shake {
+      animation: shake 0.3s linear;
+    }
+
+    /* Bagliore bianco */
+    .flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      opacity: 1;
+      animation: flashbang 2s ease-out;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes flashbang {
+      0% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <img id="bomb" src="bomb.png" alt="Bomba">
+  <audio id="flashbang-sound" src="flashbang.mp3"></audio>
+
+  <script>
+    const bomb = document.getElementById('bomb');
+    const flashbangSound = document.getElementById('flashbang-sound');
+    let clickCount = 0;
+
+    bomb.addEventListener('click', () => {
+      clickCount++;
+
+      // vibrazione
+      bomb.classList.add('shake');
+      setTimeout(() => bomb.classList.remove('shake'), 300);
+
+      // se viene cliccata 3 volte -> flashbang
+      if (clickCount === 3) {
+        flashbangSound.play();
+
+        const flash = document.createElement('div');
+        flash.classList.add('flash');
+        document.body.appendChild(flash);
+
+        setTimeout(() => {
+          flash.remove();
+          clickCount = 0; // resetta per poterlo rifare
+        }, 2000);
+      }
+    });
+  </script>
+</body>
+</html>
